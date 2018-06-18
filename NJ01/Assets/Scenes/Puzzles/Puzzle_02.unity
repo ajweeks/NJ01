@@ -2079,7 +2079,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4797068144262908, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -3.83
+      value: -1.815
       objectReference: {fileID: 0}
     - target: {fileID: 4797068144262908, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
       propertyPath: m_LocalPosition.y
@@ -2087,27 +2087,40 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4797068144262908, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -2
+      value: -1.531
       objectReference: {fileID: 0}
     - target: {fileID: 4797068144262908, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4797068144262908, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.8956424
       objectReference: {fileID: 0}
     - target: {fileID: 4797068144262908, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4797068144262908, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.4447749
       objectReference: {fileID: 0}
     - target: {fileID: 4797068144262908, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1582539536636774, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
+      propertyPath: m_Name
+      value: EyeIris
+      objectReference: {fileID: 0}
+    - target: {fileID: 1262522776669832, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
+      propertyPath: m_Name
+      value: EyePupil
+      objectReference: {fileID: 0}
+    - target: {fileID: 54261669947583760, guid: 5a2a359df08257747911d2f5679eb97e,
+        type: 2}
+      propertyPath: m_Mass
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5a2a359df08257747911d2f5679eb97e, type: 2}
@@ -2704,7 +2717,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4636349283425382, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -5.19
+      value: -5.231945
       objectReference: {fileID: 0}
     - target: {fileID: 4636349283425382, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
       propertyPath: m_LocalPosition.y
@@ -2712,27 +2725,40 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4636349283425382, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 4.99
+      value: 5.0503807
       objectReference: {fileID: 0}
     - target: {fileID: 4636349283425382, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4636349283425382, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.8212896
       objectReference: {fileID: 0}
     - target: {fileID: 4636349283425382, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4636349283425382, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.5705116
       objectReference: {fileID: 0}
     - target: {fileID: 4636349283425382, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559893021334792, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
+      propertyPath: m_Name
+      value: EyeIris
+      objectReference: {fileID: 0}
+    - target: {fileID: 1975337421834930, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}
+      propertyPath: m_Name
+      value: EyePupil
+      objectReference: {fileID: 0}
+    - target: {fileID: 54800694250148674, guid: 80c1e8273f5c9064bae5ab97e9eab812,
+        type: 2}
+      propertyPath: m_CollisionDetection
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 80c1e8273f5c9064bae5ab97e9eab812, type: 2}

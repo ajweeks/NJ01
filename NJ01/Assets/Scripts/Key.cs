@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class Key : MonoBehaviour
 {
@@ -7,18 +6,8 @@ public class Key : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Inventory.Keys++;
+            Inventory.AddKey();
             Destroy(gameObject);
-
-            Text keyCountText = GameObject.Find("KeyCount").GetComponent<Text>();
-            if (keyCountText.text.Length == 0)
-            {
-                keyCountText.text = "1";
-            }
-            else
-            {
-                keyCountText.text = (int.Parse(keyCountText.text) + 1).ToString();
-            }
         }
     }
 }

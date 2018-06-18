@@ -38,6 +38,7 @@ public class Door : MonoBehaviour
     {
         if (Inventory.Keys >= RequiredKeyCount)
         {
+            Inventory.RemoveKey();
             Open();
         }
     }

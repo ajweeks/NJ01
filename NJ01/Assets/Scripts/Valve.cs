@@ -3,7 +3,6 @@
 public class Valve : MonoBehaviour
 {
     public PlayerController[] Players;
-    public Material InteractMat;
 
     public Transform EndPos;
     public Transform OutputTransform;
@@ -39,7 +38,7 @@ public class Valve : MonoBehaviour
     private float pH = 0;
     private float pV = 0;
 
-    private int _lastInteractCW = 1;
+    private int _lastInteractCW = -1;
     void Start ()
     {
         _indexStrings = new string[2] { "0", "1" };
@@ -151,32 +150,33 @@ public class Valve : MonoBehaviour
                 transform.rotation = _startingRot * Quaternion.AngleAxis(-Mathf.Rad2Deg * _t * _rotationScale / OutputSpeed, Vector3.up);
 
                 OutputTransform.position = _outputTransformStartPos + (_t * dPos);
-
             }
-
-            if (bAction)
-            {
-                _secondsSinceAction = 0.0f;
-            }
-            else
-            {
-                _secondsSinceAction += Time.deltaTime;
-            }
-
-            float newPathActiveState = 1.0f - Mathf.Clamp01(_secondsSinceAction / _turnPathMatCoolDown);
-            float pathActiveState = Mathf.Lerp(_pPathActiveState, newPathActiveState, 0.1f);
-            foreach (ElectronPath path in Paths)
-            {
-                path.SetActiveLevel(pathActiveState);
-            }
-            _pPathActiveState = pathActiveState;
         }
+
+        if (bAction)
+        {
+            _secondsSinceAction = 0.0f;
+        }
+        else
+        {
+            _secondsSinceAction += Time.deltaTime;
+            _secondsSinceAction = Mathf.Clamp(_secondsSinceAction, 0.0f, _turnPathMatCoolDown);
+        }
+
+        float newPathActiveState = 1.0f - Mathf.Clamp01(_secondsSinceAction / _turnPathMatCoolDown - 
+            (_interactingPlayerID == -1 ? 0.0f : 0.1f));
+        float pathActiveState = Mathf.Lerp(_pPathActiveState, newPathActiveState, 0.1f);
+        foreach (ElectronPath path in Paths)
+        {
+            path.SetActiveLevel(pathActiveState);
+        }
+        _pPathActiveState = pathActiveState;
     }
 
     public void BeginInteract(int playerID)
     {
         _interactingPlayerID = playerID;
-        Players[_interactingPlayerID].GetComponent<Renderer>().material = InteractMat;
+        //Players[_interactingPlayerID].GetComponent<Renderer>().material = InteractMat;
     }
 
     public void EndInteract()
@@ -202,10 +202,5 @@ public class Valve : MonoBehaviour
         {
             EndInteract();
         }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        
     }
 }
