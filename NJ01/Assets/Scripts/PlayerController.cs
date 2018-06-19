@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour
     public int Index;
     public float MoveSpeed = 10.0f;
 
+    private float _turnSpeed = 2000.0f;
+
     private string _indexStr;
 
     private Rigidbody _rb;
@@ -30,13 +32,20 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 1.05f))
         {
             _grounded = true;
-            Debug.DrawLine(transform.position, new Vector3(100, 100, 100));
         }
 
         float MoveH = Input.GetAxis("Move H " + _indexStr);
         float MoveV = Input.GetAxis("Move V " + _indexStr);
 
-        Vector3 moveVec = new Vector3(MoveH, 0, MoveV) * MoveSpeed;
+        Helpers.CleanupAxes(ref MoveH, ref MoveV);
+
+        Vector3 moveVec = new Vector3(MoveH, 0, MoveV);
+        if (moveVec.sqrMagnitude > 1.0f)
+        {
+            moveVec.Normalize();
+        }
+        moveVec *= MoveSpeed;
+
         if (!_grounded)
         {
             moveVec *= 0.5f;
@@ -45,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
         if (moveVec.magnitude > 0.01f)
         {
-            transform.rotation = Quaternion.LookRotation(moveVec.normalized);
+            transform.rotation = Quaternion.RotateTowards(_pRot, Quaternion.LookRotation(moveVec.normalized), Time.deltaTime * _turnSpeed);
             _pRot = transform.rotation;
         }
         else

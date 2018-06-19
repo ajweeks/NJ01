@@ -12,6 +12,9 @@ public class Valve : MonoBehaviour
 
     public bool DrawPath = true;
 
+    // How quickly this valve falls back to 0 when not being interacted with
+    public float FallSpeed = 0.0f;
+
     private Quaternion _startingRot;
     private float _rotationScale = 50.0f; // Tune this to make valve rotate at same rate as joy stick
 
@@ -24,15 +27,14 @@ public class Valve : MonoBehaviour
 
     private float _t; // [0, 1] represents percent rotated
 
-    //private float MaxRotation = Mathf.PI;
-    //private float _currentRotation; // [0, MaxRotation]
-    
     private float _secondsSinceAction = 0.0f;
     private float _turnPathMatCoolDown = 1.6f; // Seconds to wait after valve turn before reverting path mats
 
     private static float MAX_JOYSTICK_ROTATION_SPEED = 15.0f;
 
     private float _pPathActiveState;
+
+    private Vector3 _dPos;
 
     private bool pInDeadzone = true;
     private float pH = 0;
@@ -58,20 +60,24 @@ public class Valve : MonoBehaviour
 
         // Start fully cooled-down
         _secondsSinceAction = _turnPathMatCoolDown;
+
+        _dPos = (EndPos.position - _outputTransformStartPos);
     }
 
     void Update ()
     {
         bool bAction = false;
+        bool bShouldRotate = false;
 
         if (_interactingPlayerID != -1)
         {
             float horizontal = Input.GetAxis("Interact H " + _indexStrings[_interactingPlayerID]);
             float vertical = Input.GetAxis("Interact V " + _indexStrings[_interactingPlayerID]);
-            float minimumExtensionLength = 0.35f;
-            float extensionLength = new Vector2(horizontal, vertical).magnitude;
 
-            bool bShouldRotate = false;
+            Helpers.CleanupAxes(ref horizontal, ref vertical);
+
+            float minimumExtensionLength = 0.1f;
+            float extensionLength = new Vector2(horizontal, vertical).magnitude;
 
             if (Input.GetButtonDown("Interact " + _indexStrings[_interactingPlayerID]))
             {
@@ -106,7 +112,7 @@ public class Valve : MonoBehaviour
                         }
                     }
 
-                    float stickRotationSpeed = (currentAngle - previousAngle);
+                    float stickRotationSpeed = -(currentAngle - previousAngle);
                     // Don't take into account spin as much when joystick is close to centered
                     stickRotationSpeed *= extensionLength;
                     stickRotationSpeed = Mathf.Clamp(stickRotationSpeed,
@@ -134,24 +140,31 @@ public class Valve : MonoBehaviour
             {
                 pH = horizontal;
                 pV = vertical;
-
-                float rotSpeed = _playerStickAvgs[_interactingPlayerID].CurrentAverage;
-                _t += rotSpeed * OutputSpeed * Time.deltaTime;
-                _t = Mathf.Clamp01(_t);
-
-
-                Vector3 dPos = (EndPos.position - _outputTransformStartPos);
-
-                if (DrawPath)
-                {
-                    Debug.DrawLine(_outputTransformStartPos, EndPos.position, Color.red, -1, false);
-                }
-
-                transform.rotation = _startingRot * Quaternion.AngleAxis(-Mathf.Rad2Deg * _t * _rotationScale / OutputSpeed, Vector3.up);
-
-                OutputTransform.position = _outputTransformStartPos + (_t * dPos);
             }
         }
+
+        if (bShouldRotate)
+        {
+            float rotSpeed = _playerStickAvgs[_interactingPlayerID].CurrentAverage;
+            _t += rotSpeed * OutputSpeed * Time.deltaTime;
+        }
+
+        if (!bAction)
+        {
+            _t -= FallSpeed * Time.deltaTime;
+        }
+
+        _t = Mathf.Clamp01(_t);
+
+
+        if (DrawPath)
+        {
+            Debug.DrawLine(_outputTransformStartPos, EndPos.position, Color.red, -1, false);
+        }
+
+        transform.rotation = _startingRot * Quaternion.AngleAxis(Mathf.Rad2Deg * _t * _rotationScale / OutputSpeed, Vector3.up);
+
+        OutputTransform.position = _outputTransformStartPos + (_t * _dPos);
 
         if (bAction)
         {
@@ -163,8 +176,9 @@ public class Valve : MonoBehaviour
             _secondsSinceAction = Mathf.Clamp(_secondsSinceAction, 0.0f, _turnPathMatCoolDown);
         }
 
-        float newPathActiveState = 1.0f - Mathf.Clamp01(_secondsSinceAction / _turnPathMatCoolDown - 
-            (_interactingPlayerID == -1 ? 0.0f : 0.1f));
+        // Always light the paths a little bit if a player is within range
+        float baselineInteractingBrightness = (_interactingPlayerID == -1 ? 0.0f : 0.1f);
+        float newPathActiveState = 1.0f - Mathf.Clamp01(_secondsSinceAction / _turnPathMatCoolDown - baselineInteractingBrightness);
         float pathActiveState = Mathf.Lerp(_pPathActiveState, newPathActiveState, 0.1f);
         foreach (ElectronPath path in Paths)
         {
@@ -176,7 +190,6 @@ public class Valve : MonoBehaviour
     public void BeginInteract(int playerID)
     {
         _interactingPlayerID = playerID;
-        //Players[_interactingPlayerID].GetComponent<Renderer>().material = InteractMat;
     }
 
     public void EndInteract()
