@@ -12,7 +12,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rb;
     private bool _grounded = false;
 
-    Quaternion _pRot;
+    private Quaternion _pRot;
+    private MovingBlock _blockRiding = null;
+    private Vector3 _blockRidingPrevPos;
 
     void Start ()
     {
@@ -20,7 +22,7 @@ public class PlayerController : MonoBehaviour
         _indexStr = Index.ToString();
     }
 
-    void Update ()
+    void Update()
     {
         if (_rb.IsSleeping())
         {
@@ -39,18 +41,27 @@ public class PlayerController : MonoBehaviour
 
         Helpers.CleanupAxes(ref MoveH, ref MoveV);
 
+        Vector3 translation = Vector3.zero;
+
+        if (_blockRiding)
+        {
+            translation = (_blockRiding.transform.position - _blockRidingPrevPos);
+            _blockRidingPrevPos = _blockRiding.transform.position;
+        }
+
         Vector3 moveVec = new Vector3(MoveH, 0, MoveV);
         if (moveVec.sqrMagnitude > 1.0f)
         {
             moveVec.Normalize();
         }
         moveVec *= MoveSpeed;
-
         if (!_grounded)
         {
             moveVec *= 0.5f;
         }
-        transform.Translate(moveVec, Space.World);
+
+        transform.Translate(translation + moveVec, Space.World);
+
 
         if (moveVec.magnitude > 0.01f)
         {
@@ -60,6 +71,18 @@ public class PlayerController : MonoBehaviour
         else
         {
             transform.rotation = _pRot;
+        }
+    }
+
+    public void SetBlockRiding(MovingBlock block)
+    {
+        _blockRiding = block;
+
+        Debug.Log(block);
+
+        if (_blockRiding)
+        {
+            _blockRidingPrevPos = _blockRiding.transform.position;
         }
     }
 }

@@ -8,7 +8,7 @@ public class LaunchPad : MonoBehaviour
     // How long the launch pad is in motion
     private float _flipDurationSeconds = 0.9f;
 
-    private float _heightAddition = 2.0f;
+    private float _heightScale = 3.0f;
 
     private bool _launched = false;
     private float _secondsSinceLaunch = -1.0f;
@@ -16,8 +16,10 @@ public class LaunchPad : MonoBehaviour
     private PlayerController _playerLaunching;
     private Quaternion _startingRot;
 
-    private Vector3 _playerPosOffset;
+    private Vector3 _playerPosInitialOffset;
+    private Vector3 _playerPosLerpedOffset;
     private Vector3 _dPos;
+    private float _dist;
 
     private bool _playerObstructed = false;
 
@@ -25,6 +27,7 @@ public class LaunchPad : MonoBehaviour
     {
         _startingRot = transform.rotation;
         _dPos = (TargetPos.position - transform.position);
+        _dist = _dPos.magnitude;
     }
 
     void Update ()
@@ -35,7 +38,7 @@ public class LaunchPad : MonoBehaviour
             {
                 if (!_playerObstructed)
                 {
-                    _playerLaunching.transform.position = TargetPos.position + _playerPosOffset;
+                    _playerLaunching.transform.position = TargetPos.position + _playerPosLerpedOffset;
                 }
                 transform.rotation = _startingRot;
                 _launched = false;
@@ -61,17 +64,45 @@ public class LaunchPad : MonoBehaviour
                 if (!_playerObstructed)
                 {
                     float t = (_secondsSinceLaunch / LaunchDurationSeconds);
-                    Vector3 newPlayerPos = transform.position + _playerPosOffset + _dPos * t;
-                    newPlayerPos.y += ((0.5f - Mathf.Abs(t - 0.5f)) * 2.0f) * _heightAddition;
+                    _playerPosLerpedOffset = Vector3.Lerp(_playerPosInitialOffset, Vector3.zero, t);
+                    _playerPosLerpedOffset.y = _playerPosInitialOffset.y;
+
+                    Vector3 newPlayerPos = transform.position + _playerPosLerpedOffset + _dPos * t;
+                    newPlayerPos.y -= (t * t - t) * _heightScale; // Parabolic curve
                     _playerLaunching.transform.position = newPlayerPos;
 
-                    if (t > 0.1f) // Don't check for obstructions at beginning
-                    if (t > 0.1f) // Don't check for obstructions at beginning
+                    if (t > 0.25f) // Don't check for obstructions at beginning
                     {
-                        Ray ray = new Ray(_playerLaunching.transform.position, _dPos.normalized);
-                        Debug.DrawLine(ray.origin, ray.origin + ray.direction * 2.0f, Color.yellow);
-                        RaycastHit rayHit;
-                        if (Physics.Raycast(ray, out rayHit, 2.0f))
+                        Vector3 rayDir = _dPos;
+                        rayDir.y = 0;
+                        rayDir.Normalize();
+
+                        Vector3 heightOffset = new Vector3(0, 1.0f, 0);
+                        float maxDist = 1.0f;
+
+                        bool validHit = false;
+
+                        Ray rayHead = new Ray(_playerLaunching.transform.position + heightOffset, rayDir);
+                        Debug.DrawLine(rayHead.origin, rayHead.origin + rayHead.direction * maxDist, Color.yellow);
+                        RaycastHit rayHeadHit;
+                        bool hit = Physics.Raycast(rayHead, out rayHeadHit, maxDist);
+                        if (hit)
+                        {
+                            validHit = !rayHeadHit.collider.CompareTag("Launchpad");
+                        }
+                        else
+                        {
+                            Ray rayFeet = new Ray(_playerLaunching.transform.position - heightOffset, rayDir);
+                            Debug.DrawLine(rayFeet.origin, rayFeet.origin + rayFeet.direction * maxDist, Color.yellow);
+                            RaycastHit rayFeetHit;
+                            hit |= Physics.Raycast(rayFeet, out rayFeetHit, maxDist);
+                            if (hit)
+                            {
+                                validHit |= !rayFeetHit.collider.CompareTag("Launchpad");
+                            }
+                        }
+
+                        if (validHit)
                         {
                             _playerObstructed = true;
                         }
@@ -95,7 +126,7 @@ public class LaunchPad : MonoBehaviour
             _launched = true;
             _secondsSinceLaunch = 0.0f;
             _playerLaunching = other.GetComponent<PlayerController>();
-            _playerPosOffset = _playerLaunching.transform.position - transform.position;
+            _playerPosInitialOffset = _playerLaunching.transform.position - transform.position;
         }
     }
 }

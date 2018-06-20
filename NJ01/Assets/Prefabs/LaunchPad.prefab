@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 65148342089663258}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Launchpad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 65125891085569750}
   m_Layer: 0
   m_Name: LaunchPad
-  m_TagString: Untagged
+  m_TagString: Launchpad
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,7 +97,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1888839127154076}
   m_LocalRotation: {x: -0, y: -0, z: -0.0714749, w: 0.9974424}
-  m_LocalPosition: {x: -10.234, y: -1.215, z: -2.54}
+  m_LocalPosition: {x: -41.573, y: -2.067132, z: -4.73691}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4323871660219870}
@@ -224,8 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fde01fff5722ec43bc7114932aa9760, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LaunchSpeed: 100
   TargetPos: {fileID: 0}
+  LaunchDurationSeconds: 1.5
 --- !u!136 &136900434772100318
 CapsuleCollider:
   m_ObjectHideFlags: 1
