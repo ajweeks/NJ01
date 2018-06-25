@@ -35,4 +35,14 @@ public class RollingAverage
         CurrentIndex = 0;
         CurrentAverage = 0.0f;
     }
+
+    public void SetAllValues(float value)
+    {
+        for (int i = 0; i < PrevValues.Length; ++i)
+        {
+            PrevValues[i] = value;
+        }
+
+        CurrentAverage = value;
+    }
 }

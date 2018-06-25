@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
     public float MoveSpeed = 10.0f;
 
     public GameObject TrajectoryPlanePrefab;
+    public GameObject ProjectilePrefab;
 
     [HideInInspector]
     public bool InteractingWithValve = false;
@@ -29,6 +30,9 @@ public class PlayerController : MonoBehaviour
     private float _trajectoryPlaneMatOffset = 0;
     private float _trajectoryPlaneOffsetSpeed = 3.0f;
 
+    private RollingAverage _averageInteractStickLength;
+    private RollingAverage _averageInteractDirection;
+
     void Start ()
     {
         _rb = GetComponent<Rigidbody>();
@@ -37,6 +41,11 @@ public class PlayerController : MonoBehaviour
         _trajectoryPlane = Instantiate(TrajectoryPlanePrefab);
         _trajectoryPlaneMesh = _trajectoryPlane.GetComponentInChildren<MeshRenderer>();
         _trajectoryPlane.SetActive(false);
+
+        _averageInteractStickLength = new RollingAverage();
+        _averageInteractStickLength.Create(5);
+        _averageInteractDirection = new RollingAverage();
+        _averageInteractDirection.Create(6);
     }
 
     void Update()
@@ -94,6 +103,7 @@ public class PlayerController : MonoBehaviour
         {
             _pAiming = false;
             _trajectoryPlane.SetActive(false);
+            _averageInteractStickLength.Clear();
         }
         else
         {
@@ -103,22 +113,38 @@ public class PlayerController : MonoBehaviour
             Helpers.CleanupAxes(ref horizontal, ref vertical);
 
             float minimumExtensionLength = 0.1f;
-            float extensionLength = new Vector2(horizontal, vertical).magnitude;
+            Vector2 stickExtension = new Vector2(horizontal, vertical);
+            float extensionLength = stickExtension.magnitude;
+
+            _averageInteractStickLength.AddValue(extensionLength);
 
             if (extensionLength > minimumExtensionLength)
             {
-                if (!_pAiming)
+                float currentAverageStickDir = _averageInteractDirection.CurrentAverage;
+                float currentStickDir = Mathf.Atan2(vertical, horizontal) + Mathf.PI;
+                if (_pAiming)
+                {
+                    // When stick is closer to center weight less heavily
+                    currentStickDir = Mathf.Lerp(currentAverageStickDir, currentStickDir, extensionLength);
+                    _averageInteractDirection.AddValue(currentStickDir);
+                }
+                else
                 {
                     _trajectoryPlane.SetActive(true);
+                    // This prevents the plane from always starting with a rotation of 0 rad
+                    _averageInteractDirection.SetAllValues(currentStickDir);
                 }
+
+
+                Debug.Log(_averageInteractDirection.CurrentAverage);
 
                 _trajectoryPlaneMatOffset += _trajectoryPlaneOffsetSpeed * Time.deltaTime;
                 _trajectoryPlaneMesh.material.SetTextureOffset("_MainTex", new Vector2(0, -_trajectoryPlaneMatOffset));
 
                 _trajectoryPlane.transform.position = transform.position;
-                Vector3 trajectoryPlaneForward = new Vector3(-horizontal, 0, -vertical);
-                trajectoryPlaneForward.Normalize();
-                _trajectoryPlane.transform.rotation = Quaternion.LookRotation(trajectoryPlaneForward, Vector3.up);
+                _trajectoryPlane.transform.rotation = Quaternion.LookRotation(
+                    Quaternion.AngleAxis(Mathf.Rad2Deg * (3.0f * Mathf.PI / 2.0f - _averageInteractDirection.CurrentAverage - Mathf.PI), Vector3.up)
+                    * Vector3.forward, Vector3.up);
 
                 _pAiming = true;
             }
@@ -126,6 +152,25 @@ public class PlayerController : MonoBehaviour
             {
                 _trajectoryPlane.SetActive(false);
                 _pAiming = false;
+
+                // If the average is still high then the player quickly released the stick
+                // Treat as fire command
+                if (_averageInteractStickLength.CurrentAverage > 0.4f)
+                {
+                    float forceMagnitude = 2000;
+
+                    Vector3 forceDir = Quaternion.AngleAxis(Mathf.Rad2Deg * (3.0f * Mathf.PI / 2.0f - _averageInteractDirection.CurrentAverage - Mathf.PI), Vector3.up) * Vector3.forward;
+                    forceDir.y += 0.1f;
+                    forceDir.Normalize();
+                    Vector3 force = forceDir * forceMagnitude * _averageInteractStickLength.CurrentAverage;
+
+                    Vector3 projectilePos = transform.position + forceDir * 0.6f;
+                    GameObject projectileInstance = Instantiate(ProjectilePrefab, projectilePos, Quaternion.identity);
+                    projectileInstance.GetComponent<Rigidbody>().AddForce(force);
+
+                    _averageInteractDirection.Clear();
+                    _averageInteractStickLength.Clear();
+                }
             }
         }
     }

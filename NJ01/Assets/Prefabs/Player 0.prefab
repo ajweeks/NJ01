@@ -348,6 +348,8 @@ MonoBehaviour:
   MoveSpeed: 0.2
   TrajectoryPlanePrefab: {fileID: 1609256229393852, guid: cef7f358326c8304492ae9df90a9e1f3,
     type: 2}
+  ProjectilePrefab: {fileID: 1109060358881666, guid: 8b59fd6a5241eba4e83b1ef618972e5c,
+    type: 2}
   InteractingWithValve: 0
 --- !u!136 &136011205738561738
 CapsuleCollider:
