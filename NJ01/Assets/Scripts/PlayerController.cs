@@ -24,7 +24,10 @@ public class PlayerController : MonoBehaviour
     private float _aimingDirection = -1.0f;
     private bool _pAiming = false;
 
-    GameObject _trajectoryPlane = null;
+    private GameObject _trajectoryPlane = null;
+    private MeshRenderer _trajectoryPlaneMesh = null;
+    private float _trajectoryPlaneMatOffset = 0;
+    private float _trajectoryPlaneOffsetSpeed = 3.0f;
 
     void Start ()
     {
@@ -32,6 +35,7 @@ public class PlayerController : MonoBehaviour
         _indexStr = Index.ToString();
 
         _trajectoryPlane = Instantiate(TrajectoryPlanePrefab);
+        _trajectoryPlaneMesh = _trajectoryPlane.GetComponentInChildren<MeshRenderer>();
         _trajectoryPlane.SetActive(false);
     }
 
@@ -107,6 +111,9 @@ public class PlayerController : MonoBehaviour
                 {
                     _trajectoryPlane.SetActive(true);
                 }
+
+                _trajectoryPlaneMatOffset += _trajectoryPlaneOffsetSpeed * Time.deltaTime;
+                _trajectoryPlaneMesh.material.SetTextureOffset("_MainTex", new Vector2(0, -_trajectoryPlaneMatOffset));
 
                 _trajectoryPlane.transform.position = transform.position;
                 Vector3 trajectoryPlaneForward = new Vector3(-horizontal, 0, -vertical);
