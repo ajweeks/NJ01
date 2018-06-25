@@ -2,7 +2,7 @@
 
 public class Valve : MonoBehaviour
 {
-    public PlayerController[] Players;
+    private PlayerController[] _players;
 
     public Transform EndPos;
     public Transform OutputTransform;
@@ -43,11 +43,15 @@ public class Valve : MonoBehaviour
     private int _lastInteractCW = -1;
     void Start ()
     {
+        _players = new PlayerController[2];
+        _players[0] = GameObject.Find("Player 0").GetComponent<PlayerController>();
+        _players[1] = GameObject.Find("Player 1").GetComponent<PlayerController>();
+
         _indexStrings = new string[2] { "0", "1" };
 
         _defaultPlayerMaterials = new Material[2];
-        _defaultPlayerMaterials[0] = Players[0].GetComponent<Renderer>().material;
-        _defaultPlayerMaterials[1] = Players[1].GetComponent<Renderer>().material;
+        _defaultPlayerMaterials[0] = _players[0].GetComponent<Renderer>().material;
+        _defaultPlayerMaterials[1] = _players[1].GetComponent<Renderer>().material;
 
         RollingAverage p1a = new RollingAverage();
         p1a.Create(8);
@@ -190,12 +194,14 @@ public class Valve : MonoBehaviour
     public void BeginInteract(int playerID)
     {
         _interactingPlayerID = playerID;
+        _players[_interactingPlayerID].InteractingWithValve = true;
     }
 
     public void EndInteract()
     {
         _playerStickAvgs[_interactingPlayerID].Clear();
-        Players[_interactingPlayerID].GetComponent<Renderer>().material = _defaultPlayerMaterials[_interactingPlayerID];
+        _players[_interactingPlayerID].InteractingWithValve = false;
+        _players[_interactingPlayerID].GetComponent<Renderer>().material = _defaultPlayerMaterials[_interactingPlayerID];
         _interactingPlayerID = -1;
     }
 

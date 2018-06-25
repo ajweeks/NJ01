@@ -5,6 +5,11 @@ public class PlayerController : MonoBehaviour
     public int Index;
     public float MoveSpeed = 10.0f;
 
+    public GameObject TrajectoryPlanePrefab;
+
+    [HideInInspector]
+    public bool InteractingWithValve = false;
+
     private float _turnSpeed = 2000.0f;
 
     private string _indexStr;
@@ -16,10 +21,18 @@ public class PlayerController : MonoBehaviour
     private MovingBlock _blockRiding = null;
     private Vector3 _blockRidingPrevPos;
 
+    private float _aimingDirection = -1.0f;
+    private bool _pAiming = false;
+
+    GameObject _trajectoryPlane = null;
+
     void Start ()
     {
         _rb = GetComponent<Rigidbody>();
         _indexStr = Index.ToString();
+
+        _trajectoryPlane = Instantiate(TrajectoryPlanePrefab);
+        _trajectoryPlane.SetActive(false);
     }
 
     void Update()
@@ -72,13 +85,47 @@ public class PlayerController : MonoBehaviour
         {
             transform.rotation = _pRot;
         }
+
+        if (InteractingWithValve)
+        {
+            _pAiming = false;
+            _trajectoryPlane.SetActive(false);
+        }
+        else
+        {
+            float horizontal = Input.GetAxis("Interact H " + _indexStr);
+            float vertical = Input.GetAxis("Interact V " + _indexStr);
+
+            Helpers.CleanupAxes(ref horizontal, ref vertical);
+
+            float minimumExtensionLength = 0.1f;
+            float extensionLength = new Vector2(horizontal, vertical).magnitude;
+
+            if (extensionLength > minimumExtensionLength)
+            {
+                if (!_pAiming)
+                {
+                    _trajectoryPlane.SetActive(true);
+                }
+
+                _trajectoryPlane.transform.position = transform.position;
+                Vector3 trajectoryPlaneForward = new Vector3(-horizontal, 0, -vertical);
+                trajectoryPlaneForward.Normalize();
+                _trajectoryPlane.transform.rotation = Quaternion.LookRotation(trajectoryPlaneForward, Vector3.up);
+
+                _pAiming = true;
+            }
+            else
+            {
+                _trajectoryPlane.SetActive(false);
+                _pAiming = false;
+            }
+        }
     }
 
     public void SetBlockRiding(MovingBlock block)
     {
         _blockRiding = block;
-
-        Debug.Log(block);
 
         if (_blockRiding)
         {
