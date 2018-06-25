@@ -1,5 +1,13 @@
 ﻿using UnityEngine;
 
+/*
+ * Wish-list
+ * - More intricate path (spline?)
+ * - Able to be locked into place?
+ * - One-way ratchet system (with release elsewhere?)
+ * - RotatingBlock?
+ */ 
+
 public class MovingBlock : MonoBehaviour 
 {
     private PlayerController _playerRiding;

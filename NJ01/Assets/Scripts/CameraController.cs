@@ -1,5 +1,12 @@
 ﻿using UnityEngine;
 
+/*
+ * Wish-list
+ * - Show occluded players using fancy mat?
+ * - Camera shake on certain events
+ * - Follow players through room exit?
+ */
+
 public class CameraController : MonoBehaviour
 {
     private PlayerController[] _players;

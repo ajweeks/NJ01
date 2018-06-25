@@ -1,5 +1,12 @@
 ﻿using UnityEngine;
 
+/*
+ * Wish-list
+ * - Play sound/rumble controller  on min/max hit based on velocity
+ * - Play sound on spin
+ * - Draw arrows going in direction of force (spinning valve moves block, falling block spins valve)
+ */
+
 public class Valve : MonoBehaviour
 {
     private PlayerController[] _players;

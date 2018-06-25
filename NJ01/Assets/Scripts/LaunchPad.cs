@@ -1,5 +1,15 @@
 ﻿using UnityEngine;
 
+/*
+ * Wish-list
+ * - Attempt to use physics to simulate launch path rather than hacking it
+ *   - Allow players to collide mid-air when jumping off different pads
+ * - Better collision detection (Player.OnCollisionEnter rather than raycasts?)
+ * - Indicate landing zone
+ * - Shoot players different distances (based on mass?)
+ * - Allow players to set launch pad rotation using valve
+ */
+
 public class LaunchPad : MonoBehaviour
 {
     public Transform TargetPos;

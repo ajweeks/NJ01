@@ -1,5 +1,16 @@
 ﻿using UnityEngine;
 
+/*
+ * Wish-list
+ * - Fade projectile trajectory plane in and out
+ * - Snap trajectory dest height to geometry
+ * - Projectile aim-assist (preview item to-be-hit)
+ * - Turn player to face slingshot direction?
+ * - Trajectory interacting with geometry (predict wall collision)
+ * - Store Interact H & V averages separately to avoid jump between 6.28rad & 0 rad
+ * - Sound effect on pull & release
+ */
+
 public class PlayerController : MonoBehaviour
 {
     public int Index;
@@ -33,6 +44,9 @@ public class PlayerController : MonoBehaviour
     private RollingAverage _averageInteractStickLength;
     private RollingAverage _averageInteractDirection;
 
+    private float _maxProjectilePlaneTilingV = 9.5f;
+    private float _projectileForceMagnitude = 2100;
+
     void Start ()
     {
         _rb = GetComponent<Rigidbody>();
@@ -43,7 +57,7 @@ public class PlayerController : MonoBehaviour
         _trajectoryPlane.SetActive(false);
 
         _averageInteractStickLength = new RollingAverage();
-        _averageInteractStickLength.Create(5);
+        _averageInteractStickLength.Create(10);
         _averageInteractDirection = new RollingAverage();
         _averageInteractDirection.Create(6);
     }
@@ -112,7 +126,7 @@ public class PlayerController : MonoBehaviour
 
             Helpers.CleanupAxes(ref horizontal, ref vertical);
 
-            float minimumExtensionLength = 0.1f;
+            float minimumExtensionLength = 0.2f;
             Vector2 stickExtension = new Vector2(horizontal, vertical);
             float extensionLength = stickExtension.magnitude;
 
@@ -135,16 +149,18 @@ public class PlayerController : MonoBehaviour
                     _averageInteractDirection.SetAllValues(currentStickDir);
                 }
 
-
-                Debug.Log(_averageInteractDirection.CurrentAverage);
-
                 _trajectoryPlaneMatOffset += _trajectoryPlaneOffsetSpeed * Time.deltaTime;
                 _trajectoryPlaneMesh.material.SetTextureOffset("_MainTex", new Vector2(0, -_trajectoryPlaneMatOffset));
+                float textureScaleV = Mathf.Lerp(0.1f, _maxProjectilePlaneTilingV, _averageInteractStickLength.CurrentAverage);
+                _trajectoryPlaneMesh.material.SetTextureScale("_MainTex", new Vector2(1.0f, textureScaleV));
 
                 _trajectoryPlane.transform.position = transform.position;
                 _trajectoryPlane.transform.rotation = Quaternion.LookRotation(
                     Quaternion.AngleAxis(Mathf.Rad2Deg * (3.0f * Mathf.PI / 2.0f - _averageInteractDirection.CurrentAverage - Mathf.PI), Vector3.up)
                     * Vector3.forward, Vector3.up);
+
+                Vector3 trajectoryPlaneScale = new Vector3(1.0f, 1.0f, _averageInteractStickLength.CurrentAverage);
+                _trajectoryPlane.transform.localScale = trajectoryPlaneScale;
 
                 _pAiming = true;
             }
@@ -155,14 +171,12 @@ public class PlayerController : MonoBehaviour
 
                 // If the average is still high then the player quickly released the stick
                 // Treat as fire command
-                if (_averageInteractStickLength.CurrentAverage > 0.4f)
+                if (_averageInteractStickLength.CurrentAverage > 0.2f)
                 {
-                    float forceMagnitude = 2000;
-
                     Vector3 forceDir = Quaternion.AngleAxis(Mathf.Rad2Deg * (3.0f * Mathf.PI / 2.0f - _averageInteractDirection.CurrentAverage - Mathf.PI), Vector3.up) * Vector3.forward;
-                    forceDir.y += 0.1f;
+                    forceDir.y += 0.4f;
                     forceDir.Normalize();
-                    Vector3 force = forceDir * forceMagnitude * _averageInteractStickLength.CurrentAverage;
+                    Vector3 force = forceDir * _projectileForceMagnitude * _averageInteractStickLength.CurrentAverage;
 
                     Vector3 projectilePos = transform.position + forceDir * 0.6f;
                     GameObject projectileInstance = Instantiate(ProjectilePrefab, projectilePos, Quaternion.identity);
