@@ -7,14 +7,11 @@ public class Door : MonoBehaviour
 
     public float OpenSpeed = 150.0f;
 
-    private BoxCollider _trigger;
-
     private bool _open = false;
     private bool _opening = false;
 
 	void Start ()
     {
-        _trigger = GetComponentInChildren<BoxCollider>();
     }
 
     private void Update()

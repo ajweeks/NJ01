@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     public GameObject ProjectilePrefab;
 
     [HideInInspector]
-    public bool InteractingWithValve = false;
+    public Valve ValveInteractingWith = null;
 
     private float _turnSpeed = 2000.0f;
 
@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
 
     private float _maxProjectilePlaneTilingV = 9.5f;
     private float _projectileForceMagnitude = 2100;
+    private float _projectileHeightAddition = 0.2f;
 
     void Start ()
     {
@@ -81,6 +82,13 @@ public class PlayerController : MonoBehaviour
 
         Helpers.CleanupAxes(ref MoveH, ref MoveV);
 
+        if (ValveInteractingWith &&
+            Mathf.Abs(ValveInteractingWith.GetMostRecentStickRotationSpeed()) > 0.1f)
+        {
+            MoveH = 0;
+            MoveV = 0;
+        }
+
         Vector3 translation = Vector3.zero;
 
         if (_blockRiding)
@@ -113,7 +121,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = _pRot;
         }
 
-        if (InteractingWithValve)
+        if (ValveInteractingWith)
         {
             _pAiming = false;
             _trajectoryPlane.SetActive(false);
@@ -174,7 +182,7 @@ public class PlayerController : MonoBehaviour
                 if (_averageInteractStickLength.CurrentAverage > 0.2f)
                 {
                     Vector3 forceDir = Quaternion.AngleAxis(Mathf.Rad2Deg * (3.0f * Mathf.PI / 2.0f - _averageInteractDirection.CurrentAverage - Mathf.PI), Vector3.up) * Vector3.forward;
-                    forceDir.y += 0.4f;
+                    forceDir.y += _projectileHeightAddition;
                     forceDir.Normalize();
                     Vector3 force = forceDir * _projectileForceMagnitude * _averageInteractStickLength.CurrentAverage;
 

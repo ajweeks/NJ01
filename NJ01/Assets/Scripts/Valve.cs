@@ -9,15 +9,20 @@
 
 public class Valve : MonoBehaviour
 {
+    public enum OutputType
+    {
+        MOVING_BLOCK,
+        FAN
+    }
+
+    public OutputType outputType;
+
     private PlayerController[] _players;
 
-    public Transform EndPos;
     public Transform OutputTransform;
-    private Vector3 _outputTransformStartPos;
+    private Quaternion _outputTransformStartRot;
 
     public ElectronPath[] Paths; // All path objects which this valve "routes its power along" towards the output
-
-    public bool DrawPath = true;
 
     // How quickly this valve falls back to 0 when not being interacted with
     public float FallSpeed = 0.0f;
@@ -25,7 +30,10 @@ public class Valve : MonoBehaviour
     private Quaternion _startingRot;
     private float _rotationScale = 50.0f; // Tune this to make valve rotate at same rate as joy stick
 
+    public bool Bounded = true;
+
     public float OutputSpeed = 10.0f;
+    public float OutputRotationMult = 90.0f;
 
     private RollingAverage[] _playerStickAvgs;
     private Material[] _defaultPlayerMaterials;
@@ -41,13 +49,12 @@ public class Valve : MonoBehaviour
 
     private float _pPathActiveState;
 
-    private Vector3 _dPos;
-
     private bool pInDeadzone = true;
     private float pH = 0;
     private float pV = 0;
 
     private int _lastInteractCW = -1;
+
     void Start ()
     {
         _players = new PlayerController[2];
@@ -66,13 +73,11 @@ public class Valve : MonoBehaviour
         p2a.Create(8);
         _playerStickAvgs = new RollingAverage[2] { p1a, p2a };
 
-        _outputTransformStartPos = OutputTransform.position;
+        _outputTransformStartRot = OutputTransform.rotation;
         _startingRot = transform.rotation;
 
         // Start fully cooled-down
         _secondsSinceAction = _turnPathMatCoolDown;
-
-        _dPos = (EndPos.position - _outputTransformStartPos);
     }
 
     void Update ()
@@ -165,17 +170,25 @@ public class Valve : MonoBehaviour
             _t -= FallSpeed * Time.deltaTime;
         }
 
-        _t = Mathf.Clamp01(_t);
-
-
-        if (DrawPath)
+        if (Bounded)
         {
-            Debug.DrawLine(_outputTransformStartPos, EndPos.position, Color.red, -1, false);
+            _t = Mathf.Clamp01(_t);
         }
+
 
         transform.rotation = _startingRot * Quaternion.AngleAxis(Mathf.Rad2Deg * _t * _rotationScale / OutputSpeed, Vector3.up);
 
-        OutputTransform.position = _outputTransformStartPos + (_t * _dPos);
+        switch (outputType)
+        {
+            case OutputType.MOVING_BLOCK:
+                OutputTransform.GetComponent<MovingBlock>().UpdatePosition(_t);
+                break;
+            case OutputType.FAN:
+                OutputTransform.rotation = _outputTransformStartRot * Quaternion.AngleAxis(_t * OutputRotationMult, Vector3.right);
+                break;
+            default:
+                break;
+        }
 
         if (bAction)
         {
@@ -198,16 +211,36 @@ public class Valve : MonoBehaviour
         _pPathActiveState = pathActiveState;
     }
 
+    public float GetMostRecentStickRotationSpeed()
+    {
+        if (_interactingPlayerID == -1)
+        {
+            return 0;
+        }
+
+        return _playerStickAvgs[_interactingPlayerID].LatestEntry;
+    }
+
+    public float GetAverageStickSpeed()
+    {
+        if (_interactingPlayerID == -1)
+        {
+            return 0;
+        }
+
+        return _playerStickAvgs[_interactingPlayerID].CurrentAverage;
+    }
+
     public void BeginInteract(int playerID)
     {
         _interactingPlayerID = playerID;
-        _players[_interactingPlayerID].InteractingWithValve = true;
+        _players[_interactingPlayerID].ValveInteractingWith = this;
     }
 
     public void EndInteract()
     {
         _playerStickAvgs[_interactingPlayerID].Clear();
-        _players[_interactingPlayerID].InteractingWithValve = false;
+        _players[_interactingPlayerID].ValveInteractingWith = null;
         _players[_interactingPlayerID].GetComponent<Renderer>().material = _defaultPlayerMaterials[_interactingPlayerID];
         _interactingPlayerID = -1;
     }

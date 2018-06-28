@@ -29,7 +29,6 @@ public class LaunchPad : MonoBehaviour
     private Vector3 _playerPosInitialOffset;
     private Vector3 _playerPosLerpedOffset;
     private Vector3 _dPos;
-    private float _dist;
 
     private bool _playerObstructed = false;
 
@@ -37,7 +36,6 @@ public class LaunchPad : MonoBehaviour
     {
         _startingRot = transform.rotation;
         _dPos = (TargetPos.position - transform.position);
-        _dist = _dPos.magnitude;
     }
 
     void Update ()

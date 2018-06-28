@@ -5,6 +5,7 @@ public class RollingAverage
     public float[] PrevValues;
 
     public int CurrentIndex = 0;
+    public float LatestEntry = 0;
 
     public void Create(int size)
     {
@@ -13,6 +14,7 @@ public class RollingAverage
 
     public void AddValue(float value)
     {
+        LatestEntry = value;
         PrevValues[CurrentIndex++] = value;
         CurrentIndex %= PrevValues.Length;
 
@@ -34,6 +36,7 @@ public class RollingAverage
 
         CurrentIndex = 0;
         CurrentAverage = 0.0f;
+        LatestEntry = 0;
     }
 
     public void SetAllValues(float value)
@@ -44,5 +47,6 @@ public class RollingAverage
         }
 
         CurrentAverage = value;
+        LatestEntry = value;
     }
 }

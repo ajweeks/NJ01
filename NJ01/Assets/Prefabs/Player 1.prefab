@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33543025626007070}
   - component: {fileID: 23842539406194170}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: EyePupil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 33345104875507270}
   - component: {fileID: 23744541668143502}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: EyeIris
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,6 @@ GameObject:
   - component: {fileID: 4003921823607430}
   - component: {fileID: 33985710752775764}
   - component: {fileID: 23196040740379978}
-  - component: {fileID: 65478780930965090}
   m_Layer: 0
   m_Name: Slingshot
   m_TagString: Untagged
@@ -129,15 +128,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1641330304590626}
-  m_LocalRotation: {x: -0, y: 0.7808362, z: -0, w: 0.62473583}
-  m_LocalPosition: {x: -7.2301836, y: 1.071, z: 3.9672682}
+  m_LocalRotation: {x: -0, y: 0.7400492, z: -0, w: 0.6725528}
+  m_LocalPosition: {x: -10.95, y: 1.081672, z: -0.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4502063039097546}
   - {fileID: 4003921823607430}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 462.674, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 455.471, z: 0}
 --- !u!23 &23196040740379978
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -313,7 +312,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1641330304590626}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -321,18 +320,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!65 &65478780930965090
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1716636208792914}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114205949816090422
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -350,7 +337,7 @@ MonoBehaviour:
     type: 2}
   ProjectilePrefab: {fileID: 1109060358881666, guid: 8b59fd6a5241eba4e83b1ef618972e5c,
     type: 2}
-  InteractingWithValve: 0
+  ValveInteractingWith: {fileID: 0}
 --- !u!136 &136700873927349680
 CapsuleCollider:
   m_ObjectHideFlags: 1
