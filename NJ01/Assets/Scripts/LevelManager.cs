@@ -27,7 +27,7 @@ public class LevelManager : MonoBehaviour
                 _levelNames[i] = files[i].Name.Split('.')[0];
             }
 
-            AudioManager.Instance.PlaySong("The_Lightworker");
+            //AudioManager.Instance.PlaySong("The_Lightworker");
         }
         else if (Instance != this)
         {

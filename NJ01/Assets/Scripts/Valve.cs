@@ -19,8 +19,8 @@ public class Valve : MonoBehaviour
 
     private PlayerController[] _players;
 
-    public Transform OutputTransform;
-    private Quaternion _outputTransformStartRot;
+    public Transform[] OutputTransforms;
+    private Quaternion[] _outputTransformsStartRot;
 
     public ElectronPath[] Paths; // All path objects which this valve "routes its power along" towards the output
 
@@ -53,7 +53,8 @@ public class Valve : MonoBehaviour
     private float pH = 0;
     private float pV = 0;
 
-    private int _lastInteractCW = -1;
+    public bool StartCW = true;
+    private int _lastInteractCW = 1;
 
     void Start ()
     {
@@ -73,8 +74,21 @@ public class Valve : MonoBehaviour
         p2a.Create(8);
         _playerStickAvgs = new RollingAverage[2] { p1a, p2a };
 
-        _outputTransformStartRot = OutputTransform.rotation;
+        _outputTransformsStartRot = new Quaternion[OutputTransforms.Length];
+        for (int i = 0; i < OutputTransforms.Length; ++i)
+        {
+            _outputTransformsStartRot[i] = OutputTransforms[i].rotation;
+        }
         _startingRot = transform.rotation;
+
+        if (StartCW)
+        {
+            _lastInteractCW = 1;
+        }
+        else
+        {
+            _lastInteractCW = -1;
+        }
 
         // Start fully cooled-down
         _secondsSinceAction = _turnPathMatCoolDown;
@@ -95,7 +109,9 @@ public class Valve : MonoBehaviour
             float minimumExtensionLength = 0.1f;
             float extensionLength = new Vector2(horizontal, vertical).magnitude;
 
-            if (Input.GetButtonDown("Interact " + _indexStrings[_interactingPlayerID]))
+            // Falling blocks can't be "pushed" down, only up
+            if (FallSpeed == 0.0f &&
+                Input.GetButtonDown("Interact " + _indexStrings[_interactingPlayerID]))
             {
                 _lastInteractCW = -_lastInteractCW;
             }
@@ -181,10 +197,16 @@ public class Valve : MonoBehaviour
         switch (outputType)
         {
             case OutputType.MOVING_BLOCK:
-                OutputTransform.GetComponent<MovingBlock>().UpdatePosition(_t);
+                for (int i = 0; i < OutputTransforms.Length; ++i)
+                {
+                    OutputTransforms[i].GetComponent<MovingBlock>().UpdatePosition(_t);
+                }
                 break;
             case OutputType.FAN:
-                OutputTransform.rotation = _outputTransformStartRot * Quaternion.AngleAxis(_t * OutputRotationMult, Vector3.right);
+                for (int i = 0; i < OutputTransforms.Length; ++i)
+                {
+                    OutputTransforms[i].rotation = _outputTransformsStartRot[i] * Quaternion.AngleAxis(_t * OutputRotationMult, Vector3.right);
+                }
                 break;
             default:
                 break;

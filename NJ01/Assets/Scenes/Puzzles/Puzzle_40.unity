@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1346,6 +1346,11 @@ Prefab:
       propertyPath: Paths.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114089678922892032, guid: e115d6f332c95e64eb70b9edc2db6212,
+        type: 2}
+      propertyPath: OutputTransforms.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4399206759612654, guid: e115d6f332c95e64eb70b9edc2db6212, type: 2}
       propertyPath: m_LocalPosition.x
       value: -41.926422
@@ -1422,6 +1427,11 @@ Prefab:
       propertyPath: m_Radius
       value: 1.4
       objectReference: {fileID: 0}
+    - target: {fileID: 114089678922892032, guid: e115d6f332c95e64eb70b9edc2db6212,
+        type: 2}
+      propertyPath: OutputTransforms.Array.data[0]
+      value: 
+      objectReference: {fileID: 1144368958}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e115d6f332c95e64eb70b9edc2db6212, type: 2}
   m_IsPrefabParent: 0
@@ -1590,6 +1600,7 @@ Transform:
   m_Children:
   - {fileID: 1128532513}
   - {fileID: 108255383}
+  - {fileID: 1833244868}
   m_Father: {fileID: 936496288}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2667,6 +2678,11 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 223050975673537872, guid: e7cd0b6d0e4eaf8489abc256d73e4b24,
+        type: 2}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1504335294}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e7cd0b6d0e4eaf8489abc256d73e4b24, type: 2}
   m_IsPrefabParent: 0
@@ -3101,6 +3117,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5de13f96f39f22d479bfe3efe6541604, type: 2}
   m_IsPrefabParent: 0
+--- !u!20 &1504335294 stripped
+Camera:
+  m_PrefabParentObject: {fileID: 20284865051804168, guid: 5de13f96f39f22d479bfe3efe6541604,
+    type: 2}
+  m_PrefabInternal: {fileID: 1504335293}
 --- !u!1 &1513967273
 GameObject:
   m_ObjectHideFlags: 0
@@ -3422,6 +3443,71 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1745397076}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1833244867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1833244868}
+  - component: {fileID: 1833244869}
+  m_Layer: 0
+  m_Name: Directional Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1833244868
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1833244867}
+  m_LocalRotation: {x: 0.44859332, y: -0.18555966, z: -0.047357447, w: 0.8729771}
+  m_LocalPosition: {x: -27.47, y: 12.46, z: 0.49}
+  m_LocalScale: {x: 1, y: 1, z: 1.0000002}
+  m_Children: []
+  m_Father: {fileID: 853701582}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 49.965004, y: -34.730003, z: -22.79}
+--- !u!108 &1833244869
+Light:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1833244867}
+  m_Enabled: 1
+  serializedVersion: 8
+  m_Type: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 0.52
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1 &1865503416
 GameObject:
   m_ObjectHideFlags: 0

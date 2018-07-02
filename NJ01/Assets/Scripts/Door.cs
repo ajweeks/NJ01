@@ -29,10 +29,13 @@ public class Door : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (InventoryManager.Keys >= RequiredKeyCount)
+        if (!_open && !_opening)
         {
-            InventoryManager.RemoveKey();
-            Open();
+            if (InventoryManager.Keys >= RequiredKeyCount)
+            {
+                InventoryManager.RemoveKey();
+                Open();
+            }
         }
     }
 
