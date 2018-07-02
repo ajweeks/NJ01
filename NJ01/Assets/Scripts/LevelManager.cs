@@ -4,20 +4,21 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    public static LevelManager Instance = null;
+
     public static string LevelDirectory = "Assets/Scenes/Puzzles/";
     private static string[] _levelNames;
     private static int _levelIndex = 0;
 
-    private static bool _created = false;
     private static bool _swappedLevels = false;
 
+    // TODO: Make singleton
     void Awake()
     {
-        if (!_created)
+        if (Instance == null)
         {
-            _created = true;
-            DontDestroyOnLoad(gameObject);
-
+            Instance = this;
+            
             var dir = new DirectoryInfo(LevelDirectory);
             FileInfo[] files = dir.GetFiles("*.unity");
             _levelNames = new string[files.Length];
@@ -25,6 +26,12 @@ public class LevelManager : MonoBehaviour
             {
                 _levelNames[i] = files[i].Name.Split('.')[0];
             }
+
+            AudioManager.Instance.PlaySong("The_Lightworker");
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
         }
 
         for (int i = 0; i < _levelNames.Length; ++i)
@@ -35,9 +42,11 @@ public class LevelManager : MonoBehaviour
                 break;
             }
         }
+
+        DontDestroyOnLoad(gameObject);
     }
-	
-	void Update()
+
+    void Update()
     {
         // Prevent registering level cycle button presses twice
         if (_swappedLevels)

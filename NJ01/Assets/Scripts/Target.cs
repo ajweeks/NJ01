@@ -68,7 +68,7 @@ public class Target : MonoBehaviour
         {
             other.GetComponent<Projectile>().HitTrigger = true;
 
-            AudioManager.instance.PlaySound("dink");
+            AudioManager.Instance.PlaySound("dink");
 
             if (SecondsDelayAfterHit > 0)
             {

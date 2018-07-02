@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour 
 {
-    public static AudioManager instance = null;
+    public static AudioManager Instance = null;
 
     // This number should equal the most number of sounds that can ever play concurrently
     public int MaxSourceCount = 8;
@@ -11,26 +11,46 @@ public class AudioManager : MonoBehaviour
     private AudioSource[] SFXSources;
     private AudioSource MusicSource;
 
+    public AudioClip[] Songs;
     public AudioClip[] Clips;
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             SFXSources = new AudioSource[MaxSourceCount];
             for (int i = 0; i < SFXSources.Length; ++i)
             {
                 SFXSources[i] = gameObject.AddComponent<AudioSource>();
                 SFXSources[i].playOnAwake = false;
             }
+
+            MusicSource = gameObject.AddComponent<AudioSource>();
+            MusicSource.playOnAwake = false;
+            MusicSource.loop = true;
         }
-        else if (instance != this)
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
 
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void PlaySong(string name)
+    {
+        for (int i = 0; i < Songs.Length; ++i)
+        {
+            if (Songs[i].name.CompareTo(name) == 0)
+            {
+                MusicSource.clip = Songs[i];
+                MusicSource.Play();
+                return;
+            }
+        }
+
+        Debug.LogError("Failed to find song named " + name);
     }
 
     public void PlaySound(string name)

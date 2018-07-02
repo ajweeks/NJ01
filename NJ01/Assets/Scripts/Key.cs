@@ -6,7 +6,7 @@ public class Key : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Inventory.AddKey();
+            InventoryManager.AddKey();
             Destroy(gameObject);
         }
     }

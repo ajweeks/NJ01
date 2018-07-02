@@ -26,7 +26,7 @@ public class Breakable : MonoBehaviour
 
             _brokenPartsParent.SetActive(true);
 
-            AudioManager.instance.PlaySoundRandomized("breaking-glass");
+            AudioManager.Instance.PlaySoundRandomized("breaking-glass");
         }
     }
 }

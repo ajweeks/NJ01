@@ -10,10 +10,6 @@ public class Door : MonoBehaviour
     private bool _open = false;
     private bool _opening = false;
 
-	void Start ()
-    {
-    }
-
     private void Update()
     {
         if (_opening)
@@ -33,9 +29,9 @@ public class Door : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (Inventory.Keys >= RequiredKeyCount)
+        if (InventoryManager.Keys >= RequiredKeyCount)
         {
-            Inventory.RemoveKey();
+            InventoryManager.RemoveKey();
             Open();
         }
     }

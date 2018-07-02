@@ -52,6 +52,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxSourceCount: 16
+  Songs:
+  - {fileID: 8300000, guid: abef4162835fcad4b92f5519843a01e4, type: 3}
   Clips:
   - {fileID: 8300000, guid: 3cdc954f7eac8a946af046f895528659, type: 3}
   - {fileID: 8300000, guid: b0a9c96103a22634eb8b112cc171511b, type: 3}

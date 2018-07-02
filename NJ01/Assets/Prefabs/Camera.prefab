@@ -100,6 +100,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioManager: {fileID: 1097120694751706, guid: 3ca46e907d53b5c448414bfe46a3d37d,
     type: 2}
+  levelManager: {fileID: 1501283321541266, guid: 480600f43a9811646aa5a73af2684632,
+    type: 2}
+  inventoryManager: {fileID: 1875660013970456, guid: 3d0df58f18729f347823a3fc69111064,
+    type: 2}
 --- !u!114 &114485287539248696
 MonoBehaviour:
   m_ObjectHideFlags: 1
