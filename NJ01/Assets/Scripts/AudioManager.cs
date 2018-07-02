@@ -14,6 +14,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] Songs;
     public AudioClip[] Clips;
 
+    private float _masterVolume = 1.0f;
+
     private void Awake()
     {
         if (Instance == null)
@@ -36,6 +38,21 @@ public class AudioManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            if (_masterVolume == 0.0f)
+            {
+                SetMasterVolume(1.0f);
+            }
+            else
+            {
+                SetMasterVolume(0.0f);
+            }
+        }
     }
 
     public void PlaySong(string name)
@@ -62,6 +79,7 @@ public class AudioManager : MonoBehaviour
                 int sourceIndex = GetNextAvailableSFXSource();
                 SFXSources[sourceIndex].clip = Clips[i];
                 SFXSources[sourceIndex].Play();
+                SFXSources[sourceIndex].volume = _masterVolume;
                 return;
             }
         }
@@ -92,6 +110,18 @@ public class AudioManager : MonoBehaviour
             SFXSources[sourceIndex].clip = Clips[soundIndices[soundIndex]];
             SFXSources[sourceIndex].Play();
         }
+    }
+
+    public void SetMasterVolume(float masterVolume)
+    {
+        _masterVolume = masterVolume;
+
+        for (int i = 0; i < SFXSources.Length; ++i)
+        {
+            SFXSources[i].volume = _masterVolume;
+        }
+
+        MusicSource.volume = _masterVolume;
     }
 
     private int GetNextAvailableSFXSource()
