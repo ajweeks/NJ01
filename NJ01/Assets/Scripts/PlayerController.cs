@@ -190,6 +190,8 @@ public class PlayerController : MonoBehaviour
                     GameObject projectileInstance = Instantiate(ProjectilePrefab, projectilePos, Quaternion.identity);
                     projectileInstance.GetComponent<Rigidbody>().AddForce(force);
 
+                    AudioManager.instance.PlaySoundRandomized("whoosh");
+
                     _averageInteractDirection.Clear();
                     _averageInteractStickLength.Clear();
                 }

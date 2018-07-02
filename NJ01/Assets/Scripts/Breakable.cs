@@ -25,6 +25,8 @@ public class Breakable : MonoBehaviour
             GetComponent<MeshRenderer>().enabled = false;
 
             _brokenPartsParent.SetActive(true);
+
+            AudioManager.instance.PlaySoundRandomized("breaking-glass");
         }
     }
 }
