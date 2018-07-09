@@ -103,6 +103,16 @@ public class MovingBlock : MonoBehaviour
         if (DrawPath)
         {
             Debug.DrawLine(_startPos, EndPos.position, Color.red, -1, false);
+
+            if (_playersRiding[0])
+            {
+                Debug.DrawLine(transform.position, _playersRiding[0].transform.position, Color.cyan);
+            }
+
+            if (_playersRiding[1])
+            {
+                Debug.DrawLine(transform.position, _playersRiding[1].transform.position, Color.cyan);
+            }
         }
 
         if (_bMovingToStartPos)

@@ -33,7 +33,7 @@ public class Door : MonoBehaviour
         {
             if (InventoryManager.Instance.Keys >= RequiredKeyCount)
             {
-                InventoryManager.Instance.RemoveKey();
+                InventoryManager.Instance.RemoveKeys(RequiredKeyCount);
                 Open();
             }
         }

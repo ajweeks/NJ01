@@ -22,18 +22,18 @@ public class InventoryManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void RemoveKey()
+    public void RemoveKeys(int count)
     {
-        if (_keys > 0)
+        if (_keys >= count)
         {
-            --_keys;
+            _keys -= count;
             UpdateText();
         }
     }
 
-    public void AddKey()
+    public void AddKeys(int count)
     {
-        ++_keys;
+        _keys += count;
         UpdateText();
     }
 

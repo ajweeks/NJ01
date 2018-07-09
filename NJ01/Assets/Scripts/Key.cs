@@ -7,7 +7,7 @@ public class Key : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             AudioManager.Instance.PlaySound("coin-pickup");
-            InventoryManager.Instance.AddKey();
+            InventoryManager.Instance.AddKeys(1);
             Destroy(gameObject);
         }
     }
