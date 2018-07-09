@@ -6,13 +6,12 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance = null;
 
-    public static string LevelDirectory = "Assets/Scenes/Puzzles/";
-    private static string[] _levelNames;
-    private static int _levelIndex = 0;
+    public string LevelDirectory = "Assets/Scenes/Puzzles/";
+    private string[] _levelNames;
+    private int _levelIndex = 0;
 
-    private static bool _swappedLevels = false;
+    private bool _swappedLevels = false;
 
-    // TODO: Make singleton
     void Awake()
     {
         if (Instance == null)
@@ -71,7 +70,12 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public static void EnterNextLevel()
+    public void ReloadLevel()
+    {
+        SceneManager.LoadSceneAsync(_levelNames[_levelIndex], LoadSceneMode.Single);
+    }
+
+    public void EnterNextLevel()
     {
         ++_levelIndex;
         if (_levelIndex >= _levelNames.Length)
@@ -83,7 +87,7 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadSceneAsync(_levelNames[_levelIndex], LoadSceneMode.Single);
     }
 
-    public static void EnterPreviousLevel()
+    public void EnterPreviousLevel()
     {
         --_levelIndex;
         if (_levelIndex < 0)

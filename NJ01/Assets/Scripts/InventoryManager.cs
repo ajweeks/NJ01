@@ -5,8 +5,8 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance = null;
 
-    static public int Keys { get { return _keys; } }
-    static private int _keys;
+    public int Keys { get { return _keys; } }
+    private int _keys;
 
     void Awake()
     {
@@ -22,7 +22,7 @@ public class InventoryManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public static void RemoveKey()
+    public void RemoveKey()
     {
         if (_keys > 0)
         {
@@ -31,13 +31,13 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public static void AddKey()
+    public void AddKey()
     {
         ++_keys;
         UpdateText();
     }
 
-    private static void UpdateText()
+    private void UpdateText()
     {
         Text keyCountText = GameObject.Find("KeyCount").GetComponent<Text>();
         if (_keys > 0)

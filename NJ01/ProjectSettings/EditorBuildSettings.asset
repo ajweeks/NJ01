@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Puzzles/Puzzle_20.unity
     guid: 79c898bdf7831af4c99bbfa2b665274f
   - enabled: 1
+    path: Assets/Scenes/Puzzles/Puzzle_21.unity
+    guid: 3c4b07af8ee1c5f4bb70d8ada7a4f44d
+  - enabled: 1
     path: Assets/Scenes/Puzzles/Puzzle_25.unity
     guid: 08f38ed692fbda34584bd7c391327709
   - enabled: 1

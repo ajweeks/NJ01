@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
     private float _projectileForceMagnitude = 2100;
     private float _projectileHeightAddition = 0.2f;
 
+    private float _minY = -8.0f;
+
     void Start ()
     {
         _rb = GetComponent<Rigidbody>();
@@ -68,6 +70,12 @@ public class PlayerController : MonoBehaviour
         if (_rb.IsSleeping())
         {
             _rb.WakeUp();
+        }
+
+        if (transform.position.y <= _minY)
+        {
+            ResetLocation();
+            return;
         }
 
         RaycastHit hit;
@@ -199,8 +207,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void ResetLocation()
+    {
+        LevelManager.Instance.ReloadLevel();
+    }
+
     public void SetBlockRiding(MovingBlock block)
     {
+        if (_blockRiding == block)
+        {
+            return;
+        }
+
+        if (_blockRiding != null)
+        {
+            _blockRiding.RemoveRider(this);
+        }
+
         _blockRiding = block;
 
         if (_blockRiding)

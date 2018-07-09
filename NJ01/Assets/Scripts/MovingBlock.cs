@@ -11,6 +11,7 @@
 public class MovingBlock : MonoBehaviour 
 {
     public bool DrawPath = true;
+    public bool AutoReturn = false;
 
     public float SecondsToReachTargetPos = 2.0f;
 
@@ -130,11 +131,35 @@ public class MovingBlock : MonoBehaviour
                 _secondsToArrival = 0.0f;
                 percentToTargetPos = 1.0f;
                 _bMovingToEndPos = false;
+
+                if (AutoReturn)
+                {
+                    StartMovingToStartPos();
+                }
             }
 
             transform.position = _startPos + (percentToTargetPos * _dPos);
         }
     }
+
+    public void RemoveRider(PlayerController pc)
+    {
+        if (_playersRiding[0] == pc)
+        {
+            _playersRiding[0] = null;
+
+            if (_playersRiding[1])
+            {
+                _playersRiding[0] = _playersRiding[1];
+                _playersRiding[1] = null;
+            }
+        }
+        else if (_playersRiding[1] == pc)
+        {
+            _playersRiding[1] = null;
+        }
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {

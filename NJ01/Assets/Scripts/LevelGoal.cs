@@ -22,7 +22,7 @@ public class LevelGoal : MonoBehaviour
 
                 if (_playersContainedCount == 2)
                 {
-                    LevelManager.EnterNextLevel();
+                    LevelManager.Instance.EnterNextLevel();
                 }
             }
         }

@@ -66,7 +66,15 @@ public class Target : MonoBehaviour
     {
         if (other.CompareTag("projectile"))
         {
-            other.GetComponent<Projectile>().HitTrigger = true;
+            Projectile projectile = other.GetComponent<Projectile>();
+
+            if (projectile.HitTrigger)
+            {
+                // This projectile has already hit something
+                return;
+            }
+
+            projectile.HitTrigger = true;
 
             AudioManager.Instance.PlaySound("dink");
 
