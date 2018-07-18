@@ -678,6 +678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DrawPath: 1
+  AutoReturn: 0
   SecondsToReachTargetPos: 2
   EndPos: {fileID: 282637179}
 --- !u!65 &367779384
@@ -2030,6 +2031,11 @@ Prefab:
       propertyPath: m_Name
       value: Door 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114631845107310000, guid: b8c391c70e141924183c9e74852bc094,
+        type: 2}
+      propertyPath: RequiredKeyCount
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b8c391c70e141924183c9e74852bc094, type: 2}
   m_IsPrefabParent: 0
@@ -2954,6 +2960,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DrawPath: 1
+  AutoReturn: 0
   SecondsToReachTargetPos: 2
   EndPos: {fileID: 1272099427}
 --- !u!1 &1454680939
