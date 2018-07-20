@@ -22,6 +22,12 @@ public class InventoryManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public void Clear()
+    {
+        _keys = 0;
+        UpdateText();
+    }
+
     public void RemoveKeys(int count)
     {
         if (_keys >= count)

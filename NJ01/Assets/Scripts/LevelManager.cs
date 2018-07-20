@@ -56,7 +56,7 @@ public class LevelManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadSceneAsync(_levelNames[_levelIndex], LoadSceneMode.Single);
+            ReloadLevel();
             _swappedLevels = true;
         }
 
@@ -73,6 +73,7 @@ public class LevelManager : MonoBehaviour
     public void ReloadLevel()
     {
         SceneManager.LoadSceneAsync(_levelNames[_levelIndex], LoadSceneMode.Single);
+        InventoryManager.Instance.Clear();
     }
 
     public void EnterNextLevel()
@@ -85,6 +86,7 @@ public class LevelManager : MonoBehaviour
         _swappedLevels = true;
 
         SceneManager.LoadSceneAsync(_levelNames[_levelIndex], LoadSceneMode.Single);
+        InventoryManager.Instance.Clear();
     }
 
     public void EnterPreviousLevel()
@@ -97,5 +99,6 @@ public class LevelManager : MonoBehaviour
         _swappedLevels = true;
 
         SceneManager.LoadSceneAsync(_levelNames[_levelIndex], LoadSceneMode.Single);
+        InventoryManager.Instance.Clear();
     }
 }
